@@ -1,0 +1,36 @@
+{
+  "name": "flockcover-task1",
+  "version": "1.0.0",
+  "description": "",
+  "engines": {
+    "node": ">=10"
+  },
+  "main": "app.js",
+  "scripts": {
+    "test": "node_modules/.bin/mocha \"src/**/*-test.js\" --timeout 20000 --exit",
+    "start": "node src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danstod/flockcover-task1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danstod/flockcover-task1/issues"
+  },
+  "homepage": "https://github.com/danstod/flockcover-task1#readme",
+  "dependencies": {
+    "async-redis": "^1.1.7",
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "retry-axios": "^0.5.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2",
+    "nock": "^10.0.6"
+  }
+}
