@@ -1,3 +1,7 @@
+# Original instructions
+
+https://github.com/flockcover/tech-screen-instructions/blob/master/Task1.md
+
 # Assumptions
 
 1. No authentication is required
@@ -9,7 +13,7 @@ I chose to use 'express' for it's performance and maturity and flexibility as a 
 For the caching choices, although memcache will likely perform better for small/simple data sets, 
 Redis was chosen as a longer term solution due to it's flexibility and it's support of a variety of data structures.    
 
-# Technology compromises
+# Technical compromises
 
 I used javascript to build a solution quickly but if many features were requested in future I would consider rewriting 
 in Typescript or another statically typed solution like FlowJS.
