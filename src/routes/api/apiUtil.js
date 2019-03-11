@@ -17,6 +17,12 @@ function getAxiosInstance(url) {
     return urlMap.get(url);
 }
 
+function idParamIsValid(id) {
+
+    let num = Number(id);
+    return !Number.isNaN(num);
+}
+
 async function getResponse(route, dataConfig) {
 
     let dataRes = {};
@@ -96,5 +102,6 @@ function isEmpty(value){
 
 module.exports = {
     getAxiosResponse,
-    getResponse
+    getResponse,
+    idParamIsValid
 };

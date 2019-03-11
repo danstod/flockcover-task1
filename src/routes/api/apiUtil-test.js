@@ -30,6 +30,18 @@ const droneDataConfigs = {
 
 describe('apiUtil: AxiosResponse', async () => {
 
+
+    it('Get all drone with malformed id: request failure', (done) => {
+
+        let result = api.idParamIsValid('1');
+        expect(result).to.equal(true);
+        result = api.idParamIsValid('100');
+        expect(result).to.equal(false);
+        result = api.idParamIsValid('1**');
+        expect(result).to.equal(false);
+
+    });
+
     it('get all drones success', async () => {
 
         expect(allDrones.drones.length).to.equal(12);

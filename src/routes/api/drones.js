@@ -31,7 +31,7 @@ async function getAllDrones(req, res) {
 async function getDrone(req, res) {
     let id = req.params.id;
 
-    if(!_.isInteger(id)) {
+    if(!apiUtil.idParamIsValid(id)) {
         console.error(`The id param value ${id} in the request is not a valid integer`);
         res.status(400).send({statusCode: 400, message: 'the id param is not valid'});
         return;
