@@ -18,8 +18,9 @@ Redis was chosen as a longer term solution due to it's flexibility and it's supp
 I used javascript to build a solution quickly but if many features were requested in future I would consider rewriting 
 in Typescript or another statically typed solution like FlowJS.
 
-Also, the retry logic is simplistic and there may be better solutions for this so this is something that should be reviewed.
+The retry logic is simplistic and there may be better solutions for this so this is something that should be reviewed.
 
+Request validation could be improved and moved into a separate module and should be if additional routes are implemented. 
 
 # How to run
 
