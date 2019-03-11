@@ -5,6 +5,10 @@ client.on('error', function(err) {
     console.error('Error connecting to redis', err);
 });
 
+function isConnected() {
+    return client.connected;
+}
+
 //default expiry is 30 minutes (1800 seconds)
 async function update(key, val, expiry = 1800) {
     await client.set(key, val, 'EX', expiry);
@@ -17,7 +21,7 @@ async function get(key) {
         return getResponse(true, val);
     }
     else {
-        return {connected: false};
+        return {connected: false, cacheHit: false};
     }
 }
 
@@ -36,6 +40,7 @@ async function flush(key) {
 }
 
 module.exports = {
+    isConnected,
     update,
     get,
     flush

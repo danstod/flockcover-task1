@@ -1,30 +1,47 @@
-const droneBaseUrl = 'https://bobs-epic-drone-shack-inc.herokuapp.com/api/v0/';
 const axios = require('axios');
-
-const axiosInstance = axios.create({
-    baseURL: droneBaseUrl,
-    timeout: 10000,
-});
-
+const cache = require('../../cache/cacheUtil');
+const updateCache = true;
+const urlMap = new Map();
 const retries = 10;
-const initialDelay = 500;
+const retryDelay = 500;
 
-const expectedData = {
-    'drones': {
-        dataName: 'drones',
-        defaultEmptyData: []
-    },
-    'drone': {
-        dataName: 'drone',
-        defaultEmptyData: {}
+function getAxiosInstance(url) {
+    if(!urlMap.has(url)) {
+        let axiosInstance = axios.create({
+            baseURL: url,
+            timeout: 10000,
+        });
+        urlMap.set(url, axiosInstance);
     }
-};
 
-async function getAxiosResponse(route, dataName, counter = 0, retry = true) {
+    return urlMap.get(url);
+}
 
-    let response;
+async function getResponse(route, dataConfig) {
+
+    let dataRes = {};
+    let result = await cache.get(route);
+
+    if(result.connected && result.cacheHit) {
+        console.log('data retrieved from cache for route: ' + route);
+        dataRes = {statusCode: 200, data: JSON.parse(result.val)};
+    }
+    else {
+        dataRes = await getAxiosResponse(route, dataConfig);
+        if(result.connected && updateCache) {
+            await cache.update(route, JSON.stringify(dataRes.data));
+        }
+    }
+
+    return dataRes;
+}
+
+async function getAxiosResponse(route, dataConfig, counter = 0, retry = true) {
+
+    let response = {};
     try {
-        console.log(`try ${route} counter: ${counter}, dataName: ${dataName}, retry: ${retry}`);
+        let axiosInstance = getAxiosInstance(dataConfig.baseUrl);
+        console.log(`try ${route} counter: ${counter}, dataName: ${dataConfig.dataName}, retry: ${retry}`);
         response = await axiosInstance.get(route);
     }
     catch (err) {
@@ -32,11 +49,11 @@ async function getAxiosResponse(route, dataName, counter = 0, retry = true) {
         if(retry) {
             counter++;
             if (counter > retries) {
-                return getNoDataResponse(dataName);
+                return getNoDataResponse(dataConfig);
             }
             else {
-                await new Promise((resolve, reject) => setTimeout(resolve, initialDelay));
-                return await getAxiosResponse(route, dataName, counter);
+                await new Promise((resolve, reject) => setTimeout(resolve, retryDelay));
+                return await getAxiosResponse(route, dataConfig, counter);
             }
         }
     }
@@ -45,28 +62,23 @@ async function getAxiosResponse(route, dataName, counter = 0, retry = true) {
 
     if(!isEmpty(response.data)) {
         console.log('data retrieved from service for route:' + route);
-        dataRes = getDataResponse(dataName, response.data, 200);
+        dataRes = getDataResponse(dataConfig, response.data, 200);
     }
     else {
         console.log('null data retrieved from service for route:' + route);
-        dataRes = getNoDataResponse(dataName);
+        dataRes = getNoDataResponse(dataConfig);
     }
 
     return dataRes;
 }
 
-function getDroneBaseUrl() {
-    return droneBaseUrl;
+function getNoDataResponse(dataConfig) {
+    return getDataResponse(dataConfig, dataConfig.defaultEmptyData, 404);
 }
+function getDataResponse(dataConfig, data, statusCode) {
 
-function getNoDataResponse(dataName) {
-    return getDataResponse(dataName, expectedData[dataName].defaultEmptyData, 404);
-}
-function getDataResponse(dataName, data, statusCode) {
-
-    let ds = expectedData[dataName];
     let dataResponse = {};
-    dataResponse[ds.dataName] = data;
+    dataResponse[dataConfig.dataName] = data;
     dataResponse['statusCode'] = statusCode;
 
     return { data: dataResponse };
@@ -82,5 +94,5 @@ function isEmpty(value){
 
 module.exports = {
     getAxiosResponse,
-    getDroneBaseUrl
+    getResponse
 };

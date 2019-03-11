@@ -16,14 +16,17 @@ describe('cacheUtil', async () => {
 
     it('has hit on the cache', async () => {
 
-        await cache.update('stod', 'is dan');
-        let result = await cache.get('stod');
-        if(result.connected) {
-            expect(result.val).to.equal('is dan');
+        if(cache.isConnected()) {
+            await cache.update('stod', 'is dan');
+            let result = await cache.get('stod');
+            if(result.connected) {
+                expect(result.val).to.equal('is dan');
+            }
+            else {
+                expect(result.connected).to.equal(false);
+            }
         }
-        else {
-            expect(result.connected).to.equal(false);
-        }
+
 
     });
 

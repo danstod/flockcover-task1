@@ -1,14 +1,25 @@
 "use strict";
 
-const cache = require('../../cache/cacheUtil');
 const apiUtil = require('../api/apiUtil');
-const updateCache = true;
+
+const dataConfigs = {
+    'drones': {
+        baseUrl: 'https://bobs-epic-drone-shack-inc.herokuapp.com/api/v0/',
+        dataName: 'drones',
+        defaultEmptyData: []
+    },
+    'drone': {
+        baseUrl: 'https://bobs-epic-drone-shack-inc.herokuapp.com/api/v0/',
+        dataName: 'drone',
+        defaultEmptyData: {}
+    }
+};
 
 async function getAllDrones(req, res) {
 
     try {
-        let dataStructureName = 'drones';
-        let dataRes = await getDataResponse('/drones', dataStructureName);
+        let routePath = `/drones`;
+        let dataRes = await apiUtil.getResponse(routePath, dataConfigs['drones']);
         sendResponse(res, dataRes);
 
     } catch (error) {
@@ -21,9 +32,8 @@ async function getDrone(req, res) {
     let id = req.params.id;
 
     try {
-        let route = `/drone/${id}`;
-        let dataStructureName = 'drone';
-        let dataRes = await getDataResponse(route, dataStructureName);
+        let routePath = `/drone/${id}`;
+        let dataRes = await apiUtil.getResponse(routePath, dataConfigs['drone']);
         sendResponse(res, dataRes);
 
     } catch (error) {
@@ -32,23 +42,6 @@ async function getDrone(req, res) {
     }
 }
 
-async function getDataResponse(route, dataName) {
-    let dataRes = {};
-    let result = await cache.get(route);
-
-    if(result.connected && result.cacheHit) {
-        console.log('data retrieved from cache for route: ' + route);
-        dataRes = {statusCode: 200, data: JSON.parse(result.val)};
-    }
-    else {
-        dataRes = await apiUtil.getAxiosResponse(route, dataName);
-        if(updateCache) {
-            await cache.update(route, JSON.stringify(dataRes.data));
-        }
-    }
-
-    return dataRes;
-}
 
 function sendResponse(res, dataRes) {
     res.status(dataRes.data.statusCode).json(dataRes.data);
