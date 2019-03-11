@@ -20,14 +20,25 @@ in Typescript or another statically typed solution like FlowJS.
 
 Also, the retry logic is simplistic and there may be better solutions for this so this is something that should be reviewed.
 
+
 # How to run
 
-- Download Redis here: `http://download.redis.io/redis-stable.tar.gz`
-- Start redis by running: `redis-server`
-    (To clear the redis cache run: `redis-cli FLUSHALL`)
-- git clone the repo and run `npm install`
-- Start the server with: `npm start`
-- And run the tests using: `npm test`
+- The server (and the redis instance) are deployed on Heroku and the server URL is: 
+    - `https://flock.herokuapp.com`
+    
+- Valid requests are:
+    - Get all drones:                 `https://flock.herokuapp.com/drones`
+    - Get individual drone detail:    `https://flock.herokuapp.com/drones/:id`
+    
+    As described in src/test/requests-test.js  
+
+If running locally with a local redis instance:
+- Download Redis here:               `http://download.redis.io/redis-stable.tar.gz`
+- Start redis by running:           `redis-server`
+    - To clear the redis cache run:  `redis-cli FLUSHALL`
+- git clone the repo and run:       `npm install`
+- Start the server with:            `npm start`
+- Run the tests using:              `npm test`
 
 # Future features
 
