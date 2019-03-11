@@ -1,4 +1,3 @@
-//https://www.npmjs.com/package/redis-mock
 const asyncRedis = require("async-redis");
 let client = asyncRedis.createClient(process.env.REDIS_URL);
 client.on('error', function(err) {
