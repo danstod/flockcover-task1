@@ -1,20 +1,15 @@
 const requestAsync = require('request-promise-native');
-let baseUrl = 'http://localhost:5000';
+// let baseUrl = 'http://localhost:5000';
+let baseUrl = 'https://flock.herokuapp.com';
 let numOfReqs = 12;
 
 /*
     Instructions:
 
-    - Start redis by running `redis-server`
-    (To clear the redis cache run: `redis-cli FLUSHALL`)
-
-    - Start the server locally using `npm start`
     - Uncomment runStress(numOfReqs)
     - Run `node test/stress-test.js` in another terminal
-
  */
 
-// uncomment to run
 // runStress(numOfReqs);
 
 function runStress(numOfReqs) {
@@ -28,6 +23,8 @@ function runSingle(url, counter) {
         url: url,
         method: 'get'
     };
+
+    console.log(`req: ${JSON.stringify(req)}`);
 
     requestAsync(req).then(function (body) {
         let b = JSON.parse(body);
