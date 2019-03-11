@@ -26,6 +26,9 @@
     "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7",
     "retry-axios": "^0.5.0"
   },
   "devDependencies": {
