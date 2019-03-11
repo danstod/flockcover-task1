@@ -52,7 +52,9 @@ async function getAxiosResponse(route, dataConfig, counter = 0, retry = true) {
                 return getNoDataResponse(dataConfig);
             }
             else {
-                await new Promise((resolve, reject) => setTimeout(resolve, retryDelay));
+                //increment the delay on each retry
+                let delay = retryDelay * counter;
+                await new Promise((resolve, reject) => setTimeout(resolve, delay));
                 return await getAxiosResponse(route, dataConfig, counter);
             }
         }
