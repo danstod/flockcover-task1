@@ -1,10 +1,13 @@
 //https://www.npmjs.com/package/redis-mock
 const asyncRedis = require("async-redis");
-let client = asyncRedis.createClient();
+let client = asyncRedis.createClient(process.env.REDIS_URL);
 client.on('error', function(err) {
     console.error('Error connecting to redis', err);
 });
 
+function getClient() {
+    return client;
+}
 function isConnected() {
     return client.connected;
 }
@@ -40,6 +43,7 @@ async function flush(key) {
 }
 
 module.exports = {
+    getClient,
     isConnected,
     update,
     get,

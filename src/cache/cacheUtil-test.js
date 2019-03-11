@@ -1,7 +1,22 @@
+require('dotenv').config();
 const expect = require('chai').expect;
 const cache = require('./cacheUtil');
 
 describe('cacheUtil', async () => {
+
+    it('Is connected to Redis AWS instance', async () => {
+
+        let result = cache.getClient();
+        let redisAWSAddress = 'ec2-63-35-89-186.eu-west-1.compute.amazonaws.com:7579';
+
+        if(process.env.hasOwnProperty('REDIS_URL')) {
+            expect(result.address).to.equal(redisAWSAddress);
+        }
+        else {
+            expect(result.address).to.equal('127.0.0.1:6379');
+        }
+
+    });
 
     it('no hit on the cache', async () => {
 
